@@ -22,24 +22,25 @@ function get_motor_property(which) =
     which == "AxleD" ? axle_d :
     which == "AxleH" ? axle_h :
     which == "ExcentricEpsH" ? excentric_eps_h :
+    which == "FullLength" ? motor_l+front_circle_h+excentric_eps_h+axle_h:
     which == "WireH" ? wire_h :
     assert(false, str("motor haven't property ", which));
 
 
-module motor() {
-    cylinder(d = motor_d, h = motor_l);
-    translate([0,0,motor_l]) {
-        cylinder(d = front_circle_d, h = front_circle_h);
+module motor(eps) {
+    cylinder(d = motor_d+eps[1], h = motor_l+eps[0]);
+    translate([0,0,motor_l+eps[0]]) {
+        cylinder(d = front_circle_d+eps[1], h = front_circle_h);
         translate([0,0,front_circle_h])
-            cylinder(d = axle_d, h = axle_h);
+            cylinder(d = axle_d+eps[1], h = axle_h+eps[0]/2);
 
     }
 }
 
-module motor_asm() {
-    motor();
+module motor_asm(eps_motor = [0,0], eps_exc = [0,0], solid = false ) {
+    motor(eps_motor);
     translate([0,0,motor_l+front_circle_h+excentric_eps_h])
-        excentric();
+        excentric(eps_exc, solid);
 
 }
 
