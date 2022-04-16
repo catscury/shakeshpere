@@ -1,9 +1,11 @@
 use <motor.scad>
+use <battery_case.scad>
+use <battery_lr54.scad>
 
-debug = ["SphereLowPart", "Motor"];
+debug = ["SphereLowPart"];
 
 $fn=100;
-wall = 4;
+wall = 9;
 sphere_d = get_motor_property("FullLength");
 
 eps_motor_d = 0.4;
@@ -25,13 +27,35 @@ module Motor_Placed() {
         motor_asm();
 }
 
+module InsideHoles() {
+    battery_case_part = GetBatteryCaseProperty("Box");
+    translate([-sphere_d/2.5-(eps_motor_l)/2,0,0])
+        rotate([0,90,0])
+        motor_asm([eps_motor_d, eps_motor_l],
+                  [eps_excentric_d, eps_excentric_l], true);
+    translate([0,sphere_d/4+2,0]) {
+        rotate([90,90,0])
+            battery_case();
+        translate([0,0,1])
+            rotate([90,0,0]) {
+            battery_lr54();
+        }
+    }
+    rotate([0,0,180])
+    translate([0,sphere_d/4+2,0]) {
+        rotate([90,90,0])
+            battery_case();
+        translate([0,0,1])
+            rotate([90,0,0]) {
+            battery_lr54();
+        }
+    }
+}
+
 module SphereLowPart() {
     difference() {
         HalfSphere();
-        translate([-sphere_d/2-(eps_motor_l)/2,0,0])
-            rotate([0,90,0])
-            motor_asm([eps_motor_d, eps_motor_l],
-                      [eps_excentric_d, eps_excentric_l], true);
+        InsideHoles();
     }
 }
 
