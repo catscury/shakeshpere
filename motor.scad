@@ -28,12 +28,12 @@ function get_motor_property(which) =
 
 
 module motor(eps) {
-    translate([0,0,eps[0]]) {
-        cylinder(d = motor_d+eps[1], h = motor_l+eps[0]);
-        translate([0,0,motor_l+eps[0]]) {
-            cylinder(d = front_circle_d+eps[1], h = front_circle_h);
+    translate([0,0,eps[1]/2]) {
+        cylinder(d = motor_d+eps[0], h = motor_l+eps[1]);
+        translate([0,0,motor_l+eps[1]]) {
+            cylinder(d = front_circle_d+eps[0], h = front_circle_h);
             translate([0,0,front_circle_h])
-                cylinder(d = axle_d+eps[1], h = axle_h+eps[0]/2);
+                cylinder(d = axle_d+eps[0], h = axle_h+eps[1]/2);
 
         }
     }
@@ -41,7 +41,7 @@ module motor(eps) {
 
 module motor_asm(eps_motor = [0,0], eps_exc = [0,0], solid = false ) {
     motor(eps_motor);
-    translate([0,0,motor_l+front_circle_h+excentric_eps_h+eps_motor[0]])
+    translate([0,0,motor_l+front_circle_h+excentric_eps_h+eps_motor[1]])
         excentric(eps_exc, solid);
 
 }
